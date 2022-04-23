@@ -1,0 +1,316 @@
+title:"Cleaning Solutions"
+
+## Cleaning data solutions
+
+## Step 1: Load packages
+
+Start by installing the required packages. 
+
+
+```{r}
+install.packages("tidyverse")
+install.packages("skimr")
+install.packages("janitor")
+```
+
+Once a package is installed, you can load it by running the `library()` function with the package name inside the parentheses:
+
+
+```{r}
+library(tidyverse)
+library(skimr)
+library(janitor)
+```
+## Step 2: Import data
+The data in this example is originally from the article Hotel Booking Demand Datasets (https://www.sciencedirect.com/science/article/pii/S2352340918315191), written by Nuno Antonio, Ana Almeida, and Luis Nunes for Data in Brief, Volume 22, February 2019.
+
+
+
+
+In the chunk below, you will use the `read_csv()` function to import data from a .csv in the project folder called "hotel_bookings.csv" and save it as a data frame called `bookings_df`:
+
+```{r}
+bookings_df <- read_csv("hotel_bookings.csv")
+```
+## Step 3: Getting to know your data
+
+Before you start cleaning your data, take some time to explore it. You can use several functions that you are already familiar with to preview your data, including the `head()` function in the code chunk below:
+
+```{r}
+head(bookings_df)
+```
+
+You can summarize or preview the data with the `str()` and `glimpse()` functions to get a better understanding of the data by running the code chunks below:
+
+```{r}
+str(bookings_df)
+```
+
+```{r}
+glimpse(bookings_df)
+```
+
+You can also use `colnames()` to check the names of the columns in your data set. Run the code chunk below to find out the column names in this data set:
+
+```{r}
+colnames(bookings_df)
+```
+
+Use the `skim_without_charts()` function from the `skimr` package by running the code below:
+
+```{r}
+skim_without_charts(bookings_df)
+```
+## Step 4: Cleaning your data
+
+Based on your notes you are primarily interested in the following variables: hotel, is_canceled, lead_time. Create a new data frame with just those columns, calling it `trimmed_df`.
+
+```{r}
+trimmed_df <- bookings_df %>% 
+  select(hotel, is_canceled, lead_time)
+```
+
+Rename the variable 'hotel' to be named 'hotel_type' to be crystal clear on what the data is about:
+
+```{r}
+trimmed_df %>% 
+  select(hotel, is_canceled, lead_time) %>% 
+  rename(hotel_type = hotel)
+```
+
+In this example, you can combine the arrival month and year into one column using the unite() function:
+
+```{r}
+example_df <- bookings_df %>%
+  select(arrival_date_year, arrival_date_month) %>% 
+  unite(arrival_month_year, c("arrival_date_month", "arrival_date_year"), sep = " ")
+```
+
+## Step 5: Another way of doing things
+
+You can also use the`mutate()` function to make changes to your columns. Let's say you wanted to create a new column that summed up all the adults, children, and babies on a reservation for the total number of people. Modify the code chunk below to create that new column: 
+
+```{r}
+example_df <- bookings_df %>%
+  mutate(guests = adults + children + babies)
+
+head(example_df)
+```
+
+Great. Now it's time to calculate some summary statistics! Calculate the total number of canceled bookings and the average lead time for booking
+
+```{r}
+example_df <- bookings_df %>%
+  summarize(number_canceled = sum(is_canceled),
+            average_lead_time = mean(lead_time))
+
+head(example_df)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+title: "Import Solutions"
+
+---
+
+## Importing and working with data activity solutions
+
+
+## Step 1: Load packages
+
+Start by installing your required package. If you have already installed and loaded `tidyverse` in this session, feel free to skip the code chunks in this step.
+
+```{r}
+install.packages("tidyverse")
+```
+```{r}
+library(tidyverse)
+```
+## Step 2: Import data
+
+The data in this example is originally from the article Hotel Booking Demand Datasets (https://www.sciencedirect.com/science/article/pii/S2352340918315191), written by Nuno Antonio, Ana Almeida, and Luis Nunes for Data in Brief, Volume 22, February 2019.
+
+
+
+In the chunk below, you will use the `read_csv()` function to import data from a .csv in the project folder called "hotel_bookings.csv" and save it as a data frame called `bookings_df`:
+
+```{r}
+bookings_df <- read_csv("hotel_bookings.csv")
+```
+
+Now that you have the `bookings_df`, you can work with it using all of the  `R` functions you have learned so far. 
+
+## Step 3: Inspect & clean data
+
+One common function you can use to preview the data is the `head()` function, which returns the columns and first several rows of data. Check out the `head()` function by running the chunk below:
+
+```{r}
+head(bookings_df)
+```
+
+Check out the `str()` function by running the code chunk below:
+
+```{r}
+str(bookings_df)
+```
+
+To find out what columns you have in your data frame, try running the the `colnames()` function in the code chunk below:
+
+```{r}
+colnames(bookings_df)
+```
+
+If you want to create another data frame using `bookings_df` that focuses on the average daily rate, which is referred to as `adr` in the data frame, and  `adults`, you can use the following code chunk to do that:
+
+```{r}
+new_df <- select(bookings_df, `adr`, adults)
+```
+
+To create new variables in your data frame, you can use the `mutate()` function. This will make changes to the data frame, but not to the original data set you imported. That source data will remain unchanged. 
+
+```{r}
+mutate(new_df, total = `adr` / adults)
+```
+
+## Step 4: Import your own data
+
+Now you can find your own .csv to import! Using the RStudio Cloud interface, import and save the file in the same folder as this R Markdown document. Then write code in the chunk below to read that data into `R`:
+```{r}
+own_df <- read_csv("<filename.csv>")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+title: "Dataframe Solutions"
+
+---
+
+## Create a data frame solutions
+This document  contains the solutions for the create a data frame activity. 
+
+## Step 1: Load packages
+Start by installing the required package; in this case, you will want to install `tidyverse`. If you have already installed and loaded `tidyverse` in this session, feel free to skip the code chunks in this step.
+
+```{r}
+install.packages("tidyverse")
+```
+```{r}
+library(tidyverse)
+```
+
+## Step 2: Create data frame
+
+Sometimes you will need to generate a data frame directly in `R`. There are a number of ways to do this; one of the most common is to create individual vectors of data and then combine them into a data frame using the `data.frame()` function.
+
+Here's how this works. First, create a vector of names:
+```{r}
+names <- c("Peter", "Jennifer", "Julie", "Alex")
+```
+
+Then create a vector of ages:
+
+```{r}
+age <- c(15, 19, 21, 25)
+```
+
+With these two vectors, you can create a new data frame called `people`:
+```{r}
+people <- data.frame(names, age)
+```
+
+## Step 3: inspect the data frame
+
+Now that you have this data frame, you can use some different functions to inspect it.
+
+One common function you can use to preview the data is the `head()` function, which returns the columns and the first several rows of data. You can check out how the `head()` function works by running the chunk below:
+
+```{r}
+head(people)
+```
+
+In addition to `head()`, there are a number of other useful functions to summarize or preview your data. For example, the `str()` and `glimpse()` functions will both provide summaries of each column in your data arranged horizontally. You can check out these two functions in action by running the code chunks below:
+
+```{r}
+str(people)
+```
+
+```{r}
+glimpse(people)
+```
+
+You can also use `colnames()` to get a list the column names in your data set. Run the code chunk below to check out this function:
+
+```{r}
+colnames(people)
+```
+
+Now that you have a data frame, you can work with it using all of the tools in `R`. For example, you could use `mutate()` if you wanted to create a new variable that would capture each person's age in twenty years. The code chunk below creates that new variable:
+
+```{r}
+mutate(people, age_in_20 = age + 20)
+```
+
+## Step 4: Try it yourself
+
+To get more familiar with creating and using data frames, use the code chunks below to create your own custom data frame. 
+
+First, create a vector of any five different fruits. You can type directly into the code chunk below; just place your cursor in the box and click to type. Once you have input the fruits you want in your data frame, run the code chunk.
+
+```{r}
+fruit <- c("Lemon", "Blueberry", "Grapefruit", "Mango", "Strawberry")
+```
+
+Now, create a new vector with a number representing your own personal rank for each fruit. Give a 1 to the fruit you like the most, and a 5 to the fruit you like the least. Remember, the scores need to be in the same order as the fruit above. So if your favorite fruit is last in the list above, the score `1` needs to be in the last position in the list below. Once you have input your rankings, run the code chunk.
+
+```{r}
+rank <- c(4, 2, 5, 3, 1)
+```
+
+Finally, combine the two vectors into a data frame. You can call it `fruit_ranks`. Edit the code chunk below and run it to create your data frame.
+
+```{r}
+fruit_ranks <- data.frame(fruit, rank)
+```
+
+After you run this code chunk, it will create a data frame with your fruits and rankings.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
